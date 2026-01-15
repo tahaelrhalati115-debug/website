@@ -22,6 +22,8 @@
             transition: opacity 1s ease-out, visibility 1s ease-out;
         }
         
+
+        
         #welcome-screen.hidden {
             opacity: 0;
             visibility: hidden;
@@ -97,6 +99,9 @@
             100% { opacity: 1; }
         }
         
+
+        
+
         /* Responsive per welcome screen */
         @media (max-width: 768px) {
             .welcome-title {
@@ -824,6 +829,12 @@
             <p class="welcome-subtitle">Accesso in corso...</p>
         </div>
     </div>
+    
+
+    
+
+    
+
     
     <!-- Particelle JS -->
     <div id="particles-js"></div>
@@ -1720,6 +1731,71 @@
                     welcomeScreen.remove();
                 }, 1000);
             }, 3000); // 3 secondi per la durata dell'animazione della barra
+        });
+        
+        // Function to create and animate sliding screenshot
+        function createSlidingScreenshot() {
+            // Create container
+            const container = document.createElement('div');
+            container.className = 'slide-container';
+            container.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+                pointer-events: none;
+                overflow: hidden;
+            `;
+            
+            // Create image
+            const img = document.createElement('img');
+            img.src = 'Screenshot 2025-03-15 151956.png';
+            img.alt = 'Security Access';
+            img.style.cssText = `
+                position: absolute;
+                top: 50%;
+                left: -100%;
+                transform: translateY(-50%);
+                max-width: 60vw;
+                max-height: 50vh;
+                border: 3px solid #ff0000;
+                border-radius: 10px;
+                box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+                animation: slideAcross 4s linear forwards;
+            `;
+            
+            // Add CSS animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideAcross {
+                    0% { left: -100%; opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { left: 100%; opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            container.appendChild(img);
+            document.body.appendChild(container);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                container.remove();
+                style.remove();
+            }, 4000);
+        }
+        
+        // Start recurring sliding animation every minute
+        setInterval(createSlidingScreenshot, 60000); // 60000ms = 1 minute
+        
+        // Also trigger once after welcome screen for immediate effect
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                createSlidingScreenshot();
+            }, 4000); // Trigger shortly after page load
         });
     </script>
 </body>
