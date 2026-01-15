@@ -412,6 +412,15 @@
             font-weight: bold;
             border: 2px solid #ff0000;
             box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
         }
         
         .member-info h3 {
@@ -881,7 +890,7 @@
                 <div class="team-member leader">
                     <div class="matrix-bg"></div>
                     <div class="member-header">
-                        <div class="member-avatar">AS</div>
+                        <div class="member-avatar"><img src="Screenshot 2026-01-15 114611.png" alt="Anton Shevtov"></div>
                         <div class="member-info">
                             <h3>ANTON SHEVTOV</h3>
                             <div class="member-role role-leader">TEAM LEADER</div>
@@ -1030,13 +1039,13 @@
                             <div class="member-role role-member">RICERCATORE</div>
                         </div>
                     </div>
-                    <p>Partecipa attivamente alla ricerca e alla stesura dei contenuti del progetto.</p>
+                    <p>contribuisce alla realizzazione della parte grafica della presentazione e allo sviluppo del sito Web.</p>
                 </div>
                 
                 <div class="team-member">
                     <div class="matrix-bg"></div>
                     <div class="member-header">
-                        <div class="member-avatar">TG</div>
+                        <div class="member-avatar"><img src="Screenshot 2026-01-01 194026.png" alt="Tommaso Giordano"></div>
                         <div class="member-info">
                             <h3>TOMMASO GIORDANO</h3>
                             <div class="member-role role-member">RICERCATORE</div>
@@ -1788,8 +1797,8 @@
             }, 4000);
         }
         
-        // Start recurring sliding animation every minute
-        setInterval(createSlidingScreenshot, 60000); // 60000ms = 1 minute
+        // Start recurring sliding animation every 30 seconds
+        setInterval(createSlidingScreenshot, 20000); // 20000ms = 20 seconds
         
         // Also trigger once after welcome screen for immediate effect
         window.addEventListener('load', function() {
