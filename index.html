@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSecurity - Ricerca Team</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Welcome Screen */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+        }
+        
+        #welcome-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .welcome-content {
+            text-align: center;
+            color: #ffffff;
+        }
+        
+        .welcome-title {
+            font-size: 5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #ff0000, #ff3333, #ff0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+            animation: welcome-pulse 2s infinite, welcome-glitch 3s infinite;
+        }
+        
+        @keyframes welcome-pulse {
+            0% { text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
+            50% { text-shadow: 0 0 30px rgba(255, 0, 0, 0.9), 0 0 40px rgba(255, 0, 0, 0.6); }
+            100% { text-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
+        }
+        
+        @keyframes welcome-glitch {
+            0% { transform: translate(0); }
+            2% { transform: translate(-3px, 3px); }
+            4% { transform: translate(-3px, -3px); }
+            6% { transform: translate(3px, 3px); }
+            8% { transform: translate(3px, -3px); }
+            10% { transform: translate(0); }
+            100% { transform: translate(0); }
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 0 auto 30px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff0000, #ff3333);
+            border-radius: 2px;
+            animation: loading 3s ease-in-out forwards;
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 2px;
+            animation: fade-in 2s ease-in-out;
+        }
+        
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        /* Responsive per welcome screen */
+        @media (max-width: 768px) {
+            .welcome-title {
+                font-size: 3rem;
+                letter-spacing: 4px;
+            }
+            
+            .loading-bar {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .welcome-title {
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+            
+            .loading-bar {
+                width: 150px;
+            }
+            
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Reset e stili base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Particelle di sfondo */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        /* Container principale */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header con effetto neon */
+        header {
+            background-color: rgba(10, 10, 10, 0.9);
+            border-bottom: 2px solid #ff0000;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            color: #ff0000;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; }
+            50% { text-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000; }
+            100% { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; }
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, #ff0000, #ff4444);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-links a:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-links a:hover:before {
+            left: 100%;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+        
+        /* Sezione Hero con effetto glitch */
+        .hero {
+            padding: 180px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #ff0000, #ff3333, #ff0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: glitch 3s infinite;
+            position: relative;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            2% { transform: translate(-2px, 2px); }
+            4% { transform: translate(-2px, -2px); }
+            6% { transform: translate(2px, 2px); }
+            8% { transform: translate(2px, -2px); }
+            10% { transform: translate(0); }
+            100% { transform: translate(0); }
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #cccccc;
+        }
+        
+        .team-count {
+            display: inline-block;
+            background-color: rgba(255, 0, 0, 0.2);
+            padding: 10px 25px;
+            border-radius: 30px;
+            border: 1px solid #ff0000;
+            margin-top: 20px;
+            font-weight: bold;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        /* Sezione Team */
+        .team-section {
+            margin-bottom: 100px;
+        }
+        
+        .section-title {
+            text-align: center;
+            color: #ff0000;
+            margin-bottom: 60px;
+            position: relative;
+            font-size: 2.2rem;
+            text-transform: uppercase;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #ff0000, transparent);
+            margin: 15px auto;
+        }
+        
+        /* Grid Membri Team */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .team-member {
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+        
+        .team-member:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+        
+        .team-member:hover:before {
+            opacity: 1;
+            animation: shine 1.5s;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.3);
+            border-color: #ff0000;
+        }
+        
+        .team-member.leader {
+            background-color: rgba(40, 0, 0, 0.9);
+            border-color: #ff0000;
+        }
+        
+        .member-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .member-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff0000, #990000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        .member-info h3 {
+            color: #ffffff;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+        
+        .member-role {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        
+        .role-leader {
+            background-color: #ff0000;
+            color: white;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        .role-responsible {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: #ff6666;
+            border: 1px solid #ff0000;
+        }
+        
+        .role-member {
+            background-color: rgba(100, 100, 100, 0.3);
+            color: #cccccc;
+        }
+        
+        .member-topic {
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #ff0000;
+        }
+        
+        .member-topic h4 {
+            color: #ff6666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Sezioni Ricerca */
+        .research-section {
+            margin-bottom: 100px;
+        }
+        
+        .research-container {
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .research-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff0000, transparent);
+        }
+        
+        .topic-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            color: #ff0000;
+        }
+        
+        .topic-icon {
+            background-color: rgba(255, 0, 0, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #ff0000;
+            border: 2px solid rgba(255, 0, 0, 0.5);
+        }
+        
+        .research-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .research-card {
+            background-color: rgba(30, 30, 30, 0.9);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #ff0000;
+            transition: transform 0.3s;
+        }
+        
+        .research-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+        }
+        
+        .research-card h4 {
+            color: #ff6666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+            padding-left: 30px;
+        }
+        
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #ff0000, transparent);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #ff0000;
+            border: 4px solid #0a0a0a;
+            box-shadow: 0 0 0 3px #ff0000;
+            animation: pulse 2s infinite;
+        }
+        
+        .timeline-year {
+            font-weight: bold;
+            color: #ff0000;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        /* Sezione VirtualBox */
+        .virtualbox-section {
+            background: linear-gradient(to right, rgba(30, 0, 0, 0.8), rgba(50, 0, 0, 0.8));
+            border-radius: 10px;
+            padding: 40px;
+            margin: 40px 0;
+            border: 1px solid #ff0000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .virtualbox-section:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .virtualbox-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            color: #ff0000;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: rgba(10, 10, 10, 0.95);
+            border-top: 2px solid #ff0000;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 100px;
+            position: relative;
+        }
+        
+        footer:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(255, 0, 0, 0.05));
+            pointer-events: none;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ff0000;
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* Pulsante torna su */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #ff0000;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            z-index: 999;
+            transition: all 0.3s;
+            display: none;
+            border: none;
+            animation: pulse 2s infinite;
+        }
+        
+        .back-to-top:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+        }
+        
+        /* Effetto digitazione */
+        .typing-text {
+            overflow: hidden;
+            border-right: 3px solid #ff0000;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 2px;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #ff0000; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .hero h2 {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .hero {
+                padding: 200px 0 80px;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .research-container {
+                padding: 25px;
+            }
+            
+            .research-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .member-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo h1 {
+                font-size: 1.4rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* Effetto scintillio per i titoli */
+        .sparkle {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .sparkle:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: sparkle 3s infinite;
+        }
+        
+        @keyframes sparkle {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Effetto matrix per lo sfondo su hover */
+        .matrix-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 95%, rgba(0, 255, 0, 0.1) 100%);
+            background-size: 100% 10px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .team-member:hover .matrix-bg {
+            opacity: 0.3;
+            animation: matrix 20s linear infinite;
+        }
+        
+        @keyframes matrix {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 1000px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen">
+        <div class="welcome-content">
+            <h1 class="welcome-title">CYBERSECURITY</h1>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p class="welcome-subtitle">Accesso in corso...</p>
+        </div>
+    </div>
+    
+    <!-- Particelle JS -->
+    <div id="particles-js"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1 class="sparkle">Cyber Security</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#team" class="active">TEAM</a></li>
+                    <li><a href="#storia">STORIA</a></li>
+                    <li><a href="#ddos">DDoS</a></li>
+                    <li><a href="#web">WEB ATTACKS</a></li>
+                    <li><a href="#difesa">DIFESA</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>RICERCA SULLA SICUREZZA INFORMATICA</h2>
+            <p class="typing-text">Un'analisi completa delle minacce informatiche e delle strategie di difesa</p>
+            <div class="team-count">
+                <i class="fas fa-users"></i> TEAM DI 11 MEMBRI <i class="fas fa-users"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sezione Team -->
+    <section id="team" class="team-section">
+        <div class="container">
+            <h2 class="section-title">TEAM DI RICERCA</h2>
+            
+            <div class="team-grid">
+                <!-- Team Leader -->
+                <div class="team-member leader">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">AS</div>
+                        <div class="member-info">
+                            <h3>ANTON SHEVTOV</h3>
+                            <div class="member-role role-leader">TEAM LEADER</div>
+                        </div>
+                    </div>
+                    <p>Coordina il gruppo, gestisce le comunicazioni e supervisiona l'intero progetto di ricerca.</p>
+                    <div class="member-topic">
+                        <h4><i class="fas fa-terminal"></i> RESPONSABILITÀ</h4>
+                        <p>Gestione progetto, coordinamento team, comunicazione con docente, valutazione membri.</p>
+                    </div>
+                </div>
+                
+                <!-- Attacchi alle applicazioni web -->
+                <div class="team-member responsible">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">DB</div>
+                        <div class="member-info">
+                            <h3>DIEGIO BORZACCHIELLO</h3>
+                            <div class="member-role role-responsible">RESPONSABILE RICERCA</div>
+                        </div>
+                    </div>
+                    <p>Ricerca sugli attacchi alle applicazioni web, vulnerabilità OWASP e tecniche di exploitation.</p>
+                    <div class="member-topic">
+                        <h4><i class="fas fa-globe"></i> ARGOMENTO ASSEGNATO</h4>
+                        <p><strong>ATTACCHI ALLE APPLICAZIONI WEB:</strong> SQL Injection, XSS, CSRF, OWASP Top 10.</p>
+                    </div>
+                </div>
+                
+                <!-- Tecniche di difesa -->
+                <div class="team-member responsible">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">GS</div>
+                        <div class="member-info">
+                            <h3>GABRIEL SPARTÌ</h3>
+                            <div class="member-role role-responsible">RESPONSABILE RICERCA</div>
+                        </div>
+                    </div>
+                    <p>Analizza le principali tecniche di difesa dalle intrusioni, firewall, sistemi di rilevamento.</p>
+                    <div class="member-topic">
+                        <h4><i class="fas fa-lock"></i> ARGOMENTO ASSEGNATO</h4>
+                        <p><strong>TECNICHE DI DIFESA:</strong> Firewall, IDS/IPS, antivirus, autenticazione multi-fattore.</p>
+                    </div>
+                </div>
+                
+                <!-- Riassunto -->
+                <div class="team-member">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">GZ</div>
+                        <div class="member-info">
+                            <h3>GABRIEL ZANUTTO</h3>
+                            <div class="member-role role-member">RICERCATORE</div>
+                        </div>
+                    </div>
+                    <p>Prepara il riassunto completo della ricerca, sintetizzando i contenuti principali.</p>
+                    <div class="member-topic">
+                        <h4><i class="fas fa-file-code"></i> ARGOMENTO ASSEGNATO</h4>
+                        <p><strong>RIASSUNTO:</strong> Sintesi della ricerca, punti chiave, conclusioni.</p>
+                    </div>
+                </div>
+                
+                <!-- Storia della sicurezza informatica -->
+                <div class="team-member responsible">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">GP</div>
+                        <div class="member-info">
+                            <h3>GIUSEPPE PORCO</h3>
+                            <div class="member-role role-responsible">RESPONSABILE RICERCA</div>
+                        </div>
+                    </div>
+                    <p>Ricostruisce la storia della sicurezza informatica dalle origini agli sviluppi recenti.</p>
+                    <div class="member-topic">
+                        <h4><i class="fas fa-history"></i> ARGOMENTO ASSEGNATO</h4>
+                        <p><strong>STORIA SICUREZZA INFORMATICA:</strong> Evoluzione dagli anni '70 a oggi.</p>
+                    </div>
+                </div>
+                
+                <!-- Tecniche di intrusione -->
+                <div class="team-member responsible">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">SYM</div>
+                        <div class="member-info">
+                            <h3>SAMUELE Y. MENDOLA</h3>
+                            <div class="member-role role-responsible">RESPONSABILE RICERCA</div>
+                        </div>
+                    </div>
+                    <p>Studia le principali tecniche di intrusione, metodi di attacco e strategie degli hacker.</p>
+                    <div class="member-topic">
+                        <h4><i class="fas fa-user-secret"></i> ARGOMENTO ASSEGNATO</h4>
+                        <p><strong>TECNICHE DI INTRUSIONE:</strong> Phishing, malware, social engineering.</p>
+                    </div>
+                </div>
+                
+                <!-- Attacchi DDoS -->
+                <div class="team-member responsible">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">YE</div>
+                        <div class="member-info">
+                            <h3>YOUSSEF ELRHALATI</h3>
+                            <div class="member-role role-responsible">RESPONSABILE RICERCA</div>
+                        </div>
+                    </div>
+                    <p>Analizza gli attacchi DDoS, le loro tipologie, gli impatti e le strategie di mitigazione.</p>
+                    <div class="member-topic">
+                        <h4><i class="fas fa-network-wired"></i> ARGOMENTO ASSEGNATO</h4>
+                        <p><strong>ATTACCHI DDOS:</strong> Tipologie, casi famosi, tecniche di mitigazione.</p>
+                    </div>
+                </div>
+                
+                <!-- Altri membri -->
+                <div class="team-member">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">BO</div>
+                        <div class="member-info">
+                            <h3>BRADLY ONOSEGERE</h3>
+                            <div class="member-role role-member">RICERCATORE</div>
+                        </div>
+                    </div>
+                    <p>Supporta la ricerca generale e contribuisce alla raccolta di materiale e fonti documentali.</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">IBA</div>
+                        <div class="member-info">
+                            <h3>ILYAS BEN ASSILA</h3>
+                            <div class="member-role role-member">RICERCATORE</div>
+                        </div>
+                    </div>
+                    <p>Collabora alla ricerca e supporta l'analisi dei dati e delle informazioni raccolte.</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">SG</div>
+                        <div class="member-info">
+                            <h3>SAMUELE GIORDANO</h3>
+                            <div class="member-role role-member">RICERCATORE</div>
+                        </div>
+                    </div>
+                    <p>Partecipa attivamente alla ricerca e alla stesura dei contenuti del progetto.</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="matrix-bg"></div>
+                    <div class="member-header">
+                        <div class="member-avatar">TG</div>
+                        <div class="member-info">
+                            <h3>TOMMASO GIORDANO</h3>
+                            <div class="member-role role-member">RICERCATORE</div>
+                        </div>
+                    </div>
+                    <p>Contribuisce alla ricerca e all'organizzazione dei materiali del progetto.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sezione Storia della Sicurezza Informatica (Giuseppe Porco) -->
+    <section id="storia" class="research-section">
+        <div class="container">
+            <div class="research-container">
+                <div class="topic-header">
+                    <div class="topic-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div>
+                        <h2>STORIA DELLA SICUREZZA INFORMATICA</h2>
+                        <p><strong>Ricercatore responsabile:</strong> Giuseppe Porco</p>
+                    </div>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">ANNI '70 - LE ORIGINI</div>
+                        <p>Nascita della sicurezza informatica con il primo virus "Creeper" (1971) e il primo antivirus "Reaper". Si diffonde la consapevolezza della necessità di proteggere i sistemi informatici.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">ANNI '80 - L'ERA DEI PC</div>
+                        <p>Diffusione dei personal computer e dei primi virus per DOS. Nel 1983, Fred Cohen conia il termine "virus informatico". Compaiono i primi worm come "Morris Worm" (1988).</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">ANNI '90 - ESPLOSIONE DI INTERNET</div>
+                        <p>Con l'espansione di Internet, aumentano gli attacchi. Compaiono i primi software antivirus commerciali. Nel 1995 nasce il firewall come sistema di protezione perimetrale.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">ANNI 2000 - PROFESSIONALIZZAZIONE</div>
+                        <p>Esplosione di worm come "ILOVEYOU" e "Code Red". Nascono gli attacchi DDoS su larga scala. La sicurezza diventa una priorità per aziende e governi.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">ANNI 2010 - OGGI</div>
+                        <p>Era degli Advanced Persistent Threats (APT), ransomware e attacchi mirati. La sicurezza si estende a cloud, IoT, dispositivi mobili e intelligenza artificiale.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sezione Attacchi DDoS (Youssef Elrhalati) -->
+    <section id="ddos" class="research-section">
+        <div class="container">
+            <div class="research-container">
+                <div class="topic-header">
+                    <div class="topic-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <div>
+                        <h2>ATTACCHI DDOS</h2>
+                        <p><strong>Ricercatore responsabile:</strong> Youssef Elrhalati</p>
+                    </div>
+                </div>
+                
+                <div class="research-content">
+                    <div class="research-card">
+                        <h4><i class="fas fa-broadcast-tower"></i> TIPOLOGIE DI ATTACCHI DDOS</h4>
+                        <ul>
+                            <li><strong>Volumetrici:</strong> Saturano la banda di rete</li>
+                            <li><strong>Applicativi:</strong> Colpiscono specifiche applicazioni</li>
+                            <li><strong>Protocollo:</strong> Sfruttano vulnerabilità nei protocolli</li>
+                            <li><strong>Ibridi:</strong> Combinano più tipologie</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="research-card">
+                        <h4><i class="fas fa-exclamation-triangle"></i> CASI FAMOSI</h4>
+                        <ul>
+                            <li><strong>2000:</strong> Attacco a Yahoo!, eBay, Amazon</li>
+                            <li><strong>2016:</strong> Attacco Dyn DNS</li>
+                            <li><strong>2018:</strong> Attacco GitHub (1.35 Tbps)</li>
+                            <li><strong>2020:</strong> Attacco AWS (2.3 Tbps)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sezione Attacchi alle Applicazioni Web (Diegio Borzacchiello) -->
+    <section id="web" class="research-section">
+        <div class="container">
+            <div class="research-container">
+                <div class="topic-header">
+                    <div class="topic-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div>
+                        <h2>ATTACCHI ALLE APPLICAZIONI WEB</h2>
+                        <p><strong>Ricercatore responsabile:</strong> Diegio Borzacchiello</p>
+                    </div>
+                </div>
+                
+                <div class="research-content">
+                    <div class="research-card">
+                        <h4><i class="fas fa-database"></i> SQL INJECTION</h4>
+                        <p>Inserimento di codice SQL malevolo tramite campi di input per manipolare database. Può portare a furto di dati, manipolazione database e accesso non autorizzato.</p>
+                    </div>
+                    
+                    <div class="research-card">
+                        <h4><i class="fas fa-code"></i> CROSS-SITE SCRIPTING (XSS)</h4>
+                        <p>Iniezione di script malevoli in pagine web visualizzate da altri utenti. Conseguenze: furto di sessioni, cookie, credenziali e defacement di siti web.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sezione Tecniche di Difesa (Gabriel Spartì) -->
+    <section id="difesa" class="research-section">
+        <div class="container">
+            <div class="research-container">
+                <div class="topic-header">
+                    <div class="topic-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div>
+                        <h2>TECNICHE DI DIFESA</h2>
+                        <p><strong>Ricercatore responsabile:</strong> Gabriel Spartì</p>
+                    </div>
+                </div>
+                
+                <div class="research-content">
+                    <div class="research-card">
+                        <h4><i class="fas fa-fire"></i> FIREWALL</h4>
+                        <p>Sistema di sicurezza di rete che monitora e controlla il traffico in entrata e in uscita in base a regole di sicurezza predeterminate.</p>
+                    </div>
+                    
+                    <div class="research-card">
+                        <h4><i class="fas fa-shield-virus"></i> ANTIVIRUS/ANTIMALWARE</h4>
+                        <p>Software progettato per rilevare, prevenire e rimuovere software malevolo. Utilizza rilevamento signature-based e behavior-based.</p>
+                    </div>
+                </div>
+                
+                <!-- VirtualBox + Kali Linux -->
+                <div class="virtualbox-section">
+                    <div class="virtualbox-header">
+                        <i class="fas fa-desktop fa-2x"></i>
+                        <div>
+                            <h3>VIRTUALBOX + KALI LINUX</h3>
+                            <p>Ambiente isolato per testing di sicurezza</p>
+                        </div>
+                    </div>
+                    
+                    <div class="research-content">
+                        <div class="research-card">
+                            <h4><i class="fas fa-sync-alt"></i> ISOLAMENTO COMPLETO</h4>
+                            <p>La macchina virtuale è separata dal sistema operativo host. Eventuali malware rimangono confinati alla VM, proteggendo il sistema principale.</p>
+                        </div>
+                        
+                        <div class="research-card">
+                            <h4><i class="fas fa-camera"></i> SNAPSHOT E RIPRISTINO</h4>
+                            <p>Possibilità di creare istantanee dello stato della VM prima di test rischiosi e ripristinare rapidamente in caso di problemi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>CYBER SECURITY RESEARCH</span>
+            </div>
+            
+            <p>Progetto realizzato dal team coordinato da <strong>ANTON SHEVTOV</strong> (TEAM LEADER)  </p>
+            <p><strong>DEV:</strong>SAMUELE GIORDANO/YOUSSEF ELRHALATI</p>
+            <p>11 MEMBRI - ANNO SCOLASTICO 2025/2026</p>
+            
+            <div class="copyright">
+                <p></p>
+                <p style="margin-top: 10px;"></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Pulsante Torna Su -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Script particelle -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Inizializza le particelle
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 150, density: { enable: true, value_area: 800 } },
+                color: { value: "#ff0000" },
+                shape: {
+                    type: "circle",
+                    stroke: { width: 0, color: "#000000" }
+                },
+                opacity: {
+                    value: 0.5,
+                    random: true,
+                    anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#ff0000",
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                    attract: { enable: false, rotateX: 600, rotateY: 1200 }
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // PRANK COLLECTION - Funzioni scherzo
+        
+        // Prank 1: Fake Error Alert
+        let prankCount = 0;
+        function showFakeError() {
+            if (prankCount < 3) { // Limita a 3 volte
+                prankCount++;
+                const fakeErrors = [
+                    '⚠️ SECURITY ALERT: Unauthorized access detected!',
+                    '🚨 FIREWALL BREACH: System compromised!',
+                    '❌ CRITICAL ERROR: Connection timeout',
+                    '☠️ MALWARE DETECTED: Immediate action required!'
+                ];
+                
+                const randomError = fakeErrors[Math.floor(Math.random() * fakeErrors.length)];
+                
+                // Crea alert stile terminale
+                const alertDiv = document.createElement('div');
+                alertDiv.innerHTML = `
+                    <div style="position: fixed; top: 20px; right: 20px; 
+                                background: #000; color: #ff0000; 
+                                border: 2px solid #ff0000; 
+                                padding: 15px; 
+                                border-radius: 5px; 
+                                font-family: monospace; 
+                                z-index: 9999; 
+                                box-shadow: 0 0 20px rgba(255,0,0,0.5);
+                                max-width: 300px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>TERMINAL ERROR</span>
+                            <span style="cursor: pointer;" onclick="this.parentElement.parentElement.remove()">×</span>
+                        </div>
+                        ${randomError}
+                        <div style="margin-top: 10px; font-size: 0.8em; color: #999;">
+                            [Press ESC to dismiss]
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(alertDiv);
+                
+                // Auto rimozione dopo 3 secondi
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 3000);
+            }
+        }
+        
+        // Prank 2: Mouse Trail Glitch
+        let trailTimeout;
+        document.addEventListener('mousemove', function(e) {
+            if (Math.random() < 0.02) { // 2% chance
+                clearTimeout(trailTimeout);
+                
+                const trail = document.createElement('div');
+                trail.style.position = 'fixed';
+                trail.style.left = (e.clientX - 10) + 'px';
+                trail.style.top = (e.clientY - 10) + 'px';
+                trail.style.width = '20px';
+                trail.style.height = '20px';
+                trail.style.background = '#ff0000';
+                trail.style.borderRadius = '50%';
+                trail.style.zIndex = '9998';
+                trail.style.pointerEvents = 'none';
+                trail.style.opacity = '0.7';
+                trail.style.boxShadow = '0 0 10px #ff0000';
+                
+                document.body.appendChild(trail);
+                
+                setTimeout(() => {
+                    trail.remove();
+                }, 500);
+            }
+        });
+        
+        // Prank 3: Keyboard Jumble
+        let jumbleActive = false;
+        document.addEventListener('keydown', function(e) {
+            // PRANK CONTROLS - Shortcut Keys
+            
+            // Ctrl + Shift + P = Activate all pranks
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') {
+                e.preventDefault();
+                triggerMatrixRain();
+                setTimeout(() => showFakeError(), 1000);
+                setTimeout(() => triggerFakeLoading(), 2000);
+                
+                // Show activation message
+                const msg = document.createElement('div');
+                msg.innerHTML = '<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #000; color: #ff0000; padding: 20px; border: 2px solid #ff0000; border-radius: 10px; font-family: monospace; z-index: 10000; text-align: center;"><div style="font-size: 24px; margin-bottom: 10px;">🔥 PRANK MODE ACTIVATED</div><div style="font-size: 14px;">Enjoy the chaos!</div></div>';
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 3000);
+            }
+            
+            // Individual prank triggers
+            if (e.key.toLowerCase() === 'f') {
+                showFakeError();
+            }
+            
+            if (e.key.toLowerCase() === 'l') {
+                triggerFakeLoading();
+            }
+            
+            if (e.key.toLowerCase() === 'm') {
+                triggerMatrixRain();
+            }
+            
+            // H = Help/Commands
+            if (e.key.toLowerCase() === 'h') {
+                const help = document.createElement('div');
+                help.innerHTML = `
+                    <div style="position: fixed; top: 20px; left: 20px; 
+                                background: rgba(0,0,0,0.9); color: #0f0; 
+                                padding: 20px; border: 1px solid #0f0;
+                                border-radius: 10px; font-family: monospace;
+                                z-index: 10000; max-width: 300px;">
+                        <div style="font-size: 18px; margin-bottom: 15px; color: #ff0000;">PRANK COMMANDS</div>
+                        <div style="font-size: 14px; line-height: 1.6;">
+                            <div><strong>F</strong> - Fake Error Alert</div>
+                            <div><strong>L</strong> - Fake Loading Screen</div>
+                            <div><strong>M</strong> - Matrix Rain Effect</div>
+                            <div><strong>Ctrl+J</strong> - Keyboard Jumble</div>
+                            <div><strong>Ctrl+Shift+P</strong> - Activate ALL Pranks</div>
+                            <div><strong>H</strong> - Show/Hide this Help</div>
+                        </div>
+                        <div style="margin-top: 15px; font-size: 12px; color: #666;">
+                            These are harmless jokes! 😈
+                        </div>
+                    </div>
+                `;
+                
+                // Toggle help visibility
+                const existingHelp = document.querySelector('div[style*="PRANK COMMANDS"]');
+                if (existingHelp) {
+                    existingHelp.remove();
+                } else {
+                    document.body.appendChild(help);
+                    setTimeout(() => {
+                        if (help.parentNode) help.remove();
+                    }, 8000);
+                }
+            }
+            
+            // Original keyboard jumble functionality
+            if (e.key === 'j' && e.ctrlKey) { // Ctrl+J per attivare/disattivare
+                e.preventDefault();
+                jumbleActive = !jumbleActive;
+                
+                if (jumbleActive) {
+                    // Mostra notifica
+                    const notify = document.createElement('div');
+                    notify.textContent = '🔓 KEYBOARD JUMBLE ACTIVATED';
+                    notify.style.cssText = `
+                        position: fixed; top: 50%; left: 50%; 
+                        transform: translate(-50%, -50%);
+                        background: #000; color: #0f0; 
+                        padding: 10px 20px; 
+                        border: 1px solid #0f0;
+                        border-radius: 5px;
+                        font-family: monospace;
+                        z-index: 9999;
+                    `;
+                    document.body.appendChild(notify);
+                    setTimeout(() => notify.remove(), 2000);
+                }
+            }
+            
+            if (jumbleActive && e.key.length === 1) {
+                e.preventDefault();
+                const jumbledKeys = ['@','#','$','%','&','*','!','?'];
+                const randomChar = jumbledKeys[Math.floor(Math.random() * jumbledKeys.length)];
+                document.execCommand('insertText', false, randomChar);
+            }
+        });
+        
+        // Prank 4: Fake Loading Progress
+        function triggerFakeLoading() {
+            const overlay = document.createElement('div');
+            overlay.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                            background: rgba(0,0,0,0.9); 
+                            display: flex; flex-direction: column; 
+                            justify-content: center; align-items: center; 
+                            z-index: 10000; color: #0f0; font-family: monospace;">
+                    <div style="font-size: 24px; margin-bottom: 20px;">ACCESSING SECURE SERVERS...</div>
+                    <div style="width: 300px; height: 20px; border: 2px solid #0f0; border-radius: 10px; overflow: hidden;">
+                        <div id="fakeProgress" style="height: 100%; width: 0%; background: linear-gradient(90deg, #0f0, #00ff00); 
+                                     transition: width 0.1s;"></div>
+                    </div>
+                    <div id="progressText" style="margin-top: 15px; font-size: 14px;">INITIALIZING...</div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #666;">Do not close this window</div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            let progress = 0;
+            const progressTexts = [
+                'CONNECTING TO MAINFRAME...',
+                'BYPASSING FIREWALL...',
+                'DECRYPTING DATABASE...',
+                'ACCESSING RESTRICTED FILES...',
+                'DOWNLOADING SENSITIVE DATA...',
+                'COVERING TRACKS...',
+                'FINALIZING CONNECTION...'
+            ];
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 8 + 2;
+                if (progress > 100) progress = 100;
+                
+                document.getElementById('fakeProgress').style.width = progress + '%';
+                
+                const textIndex = Math.floor((progress / 100) * progressTexts.length);
+                if (textIndex < progressTexts.length) {
+                    document.getElementById('progressText').textContent = progressTexts[textIndex];
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        overlay.remove();
+                        // Messaggio finale
+                        const msg = document.createElement('div');
+                        msg.textContent = '✅ ACCESS GRANTED - Data downloaded successfully';
+                        msg.style.cssText = `
+                            position: fixed; bottom: 20px; right: 20px;
+                            background: #000; color: #0f0;
+                            padding: 15px; border: 1px solid #0f0;
+                            border-radius: 5px; font-family: monospace;
+                            z-index: 9999;
+                        `;
+                        document.body.appendChild(msg);
+                        setTimeout(() => msg.remove(), 3000);
+                    }, 1000);
+                }
+            }, 200);
+        }
+        
+        // Trigger pranks casualmente
+        setInterval(() => {
+            if (Math.random() < 0.005) { // 0.5% chance ogni secondo
+                showFakeError();
+            }
+        }, 1000);
+        
+        // Prank 5: Matrix Rain Effect (attivabile)
+        function triggerMatrixRain() {
+            const canvas = document.createElement('canvas');
+            canvas.style.cssText = `
+                position: fixed; top: 0; left: 0; 
+                width: 100%; height: 100%; 
+                z-index: 9999; pointer-events: none;
+            `;
+            
+            document.body.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const chars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const charArray = chars.split('');
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+            
+            for(let x = 0; x < columns; x++) {
+                drops[x] = 1;
+            }
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#0F0';
+                ctx.font = fontSize + 'px monospace';
+                
+                for(let i = 0; i < drops.length; i++) {
+                    const text = charArray[Math.floor(Math.random() * charArray.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            
+            const matrixInterval = setInterval(draw, 35);
+            
+            setTimeout(() => {
+                clearInterval(matrixInterval);
+                canvas.remove();
+            }, 8000);
+        }
+        
+        // Smooth scrolling per i link interni
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                // Small chance for prank instead
+                if (Math.random() < 0.1) { // 10% chance
+                    e.preventDefault();
+                    if (Math.random() < 0.5) {
+                        showFakeError();
+                    } else {
+                        triggerFakeLoading();
+                    }
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 90,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Aggiorna link attivo
+                    document.querySelectorAll('.nav-links a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Highlight sezione attiva durante lo scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                if(window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            // Aggiorna link di navigazione
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Mostra/nascondi pulsante torna su
+            const backToTop = document.getElementById('backToTop');
+            if(window.scrollY > 300) {
+                backToTop.style.display = 'flex';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // Funzionalità pulsante torna su
+        document.getElementById('backToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Effetto glitch random sui titoli
+        setInterval(() => {
+            const titles = document.querySelectorAll('h2, .section-title');
+            titles.forEach(title => {
+                if(Math.random() < 0.01) { // 1% di probabilità ogni secondo
+                    title.style.animation = 'glitch 0.3s';
+                    setTimeout(() => {
+                        title.style.animation = '';
+                    }, 300);
+                }
+            });
+        }, 1000);
+        
+        // Effetto digitazione per altri elementi
+        const typingElements = document.querySelectorAll('.typing-text');
+        typingElements.forEach((element, index) => {
+            setTimeout(() => {
+                element.style.animation = 'typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite';
+            }, index * 500);
+        });
+        
+        // Effetto hover avanzato per i membri del team
+        document.querySelectorAll('.team-member').forEach(member => {
+            member.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+                this.style.boxShadow = '0 10px 25px rgba(255, 0, 0, 0.5)';
+            });
+            
+            member.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.5)';
+            });
+        });
+        
+        // Effetto di accensione al caricamento
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 1s';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // Effetto di accensione per i membri del team
+            const members = document.querySelectorAll('.team-member');
+            members.forEach((member, index) => {
+                member.style.opacity = '0';
+                member.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    member.style.transition = 'opacity 0.5s, transform 0.5s';
+                    member.style.opacity = '1';
+                    member.style.transform = 'translateY(0)';
+                }, 300 + (index * 100));
+            });
+        });
+        
+
+        // Nascondi welcome screen dopo caricamento
+        window.addEventListener('load', function() {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            
+            // Aspetta che la barra di caricamento finisca
+            setTimeout(() => {
+                welcomeScreen.classList.add('hidden');
+                
+                // Rimuovi completamente dopo la transizione
+                setTimeout(() => {
+                    welcomeScreen.remove();
+                }, 1000);
+            }, 3000); // 3 secondi per la durata dell'animazione della barra
+        });
+    </script>
+</body>
+</html>
